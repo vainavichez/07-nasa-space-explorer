@@ -124,14 +124,26 @@ button:hover {
   border-radius: 4px;
 }
 
-.gallery-item p {
+.gallery-item h2 {
   margin-top: 10px;
-  padding: 5px;
+  font-size: 18px;
+}
+
+.gallery-item time {
+  margin-top: 8px;
+  color: #666;
   font-size: 14px;
 }
 
 /* Placeholder content */
 .placeholder {
+  flex: 1 1 100%;
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.gallery-message {
   flex: 1 1 100%;
   text-align: center;
   padding: 40px;
