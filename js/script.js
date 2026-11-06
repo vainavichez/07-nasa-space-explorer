@@ -3,7 +3,7 @@ const startInput = document.getElementById('startDate');
 const endInput = document.getElementById('endDate');
 const getImagesButton = document.getElementById('getImagesButton');
 const gallery = document.getElementById('gallery');
-const apodUrl = 'https://api.nasa.gov/planetary/apod';
+const apodUrl = 'https://science.nasa.gov/wp-json/wp/v2/apod-basic';
 const apiKey = 'MPb6jJKDDCPMhKgmhBGGQdBTjmkftPGtWbttjBbp';
 
 // Call the setupDateInputs function from dateRange.js
@@ -52,11 +52,10 @@ async function getSpaceImages() {
     if (!response.ok || data.error) {
       throw new Error(data.error?.message || 'NASA could not load images for those dates.');
     }
-    console.log(data.json);
 
     // A date range normally returns an array; this also handles a single result.
     const images = (Array.isArray(data) ? data : [data])
-      .filter((item) => item.media_type === 'image');
+      .filter((item) => item.media_type === 'image' && item.url && item.title && item.date);
 
     if (images.length === 0) {
       showGalleryMessage('No space images were found for that date range.');
@@ -71,7 +70,7 @@ async function getSpaceImages() {
       card.className = 'gallery-item';
 
       const image = document.createElement('img');
-      image.src = item.url;
+      image.src = item.hdurl;
       image.alt = item.title;
       image.loading = 'lazy';
 
