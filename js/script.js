@@ -3,6 +3,12 @@ const startInput = document.getElementById('startDate');
 const endInput = document.getElementById('endDate');
 const getImagesButton = document.getElementById('getImagesButton');
 const gallery = document.getElementById('gallery');
+const imageModal = document.getElementById('imageModal');
+const closeModalButton = document.getElementById('closeModalButton');
+const modalImage = document.getElementById('modalImage');
+const modalTitle = document.getElementById('modalTitle');
+const modalDate = document.getElementById('modalDate');
+const modalExplanation = document.getElementById('modalExplanation');
 const apodUrl = 'https://science.nasa.gov/wp-json/wp/v2/apod-basic';
 const apiKey = 'MPb6jJKDDCPMhKgmhBGGQdBTjmkftPGtWbttjBbp';
 
@@ -13,6 +19,12 @@ const apiKey = 'MPb6jJKDDCPMhKgmhBGGQdBTjmkftPGtWbttjBbp';
 setupDateInputs(startInput, endInput);
 
 getImagesButton.addEventListener('click', getSpaceImages);
+closeModalButton.addEventListener('click', () => imageModal.close());
+imageModal.addEventListener('click', (event) => {
+  if (event.target === imageModal) {
+    imageModal.close();
+  }
+});
 
 function showGalleryMessage(message) {
   const paragraph = document.createElement('p');
@@ -75,10 +87,26 @@ async function getSpaceImages() {
       const card = document.createElement('article');
       card.className = 'gallery-item';
 
+      const imageButton = document.createElement('button');
+      imageButton.className = 'gallery-image-button';
+      imageButton.type = 'button';
+      imageButton.setAttribute('aria-label', `View details for ${item.title}`);
+
       const image = document.createElement('img');
       image.src = item.hdurl;
       image.alt = item.title;
       image.loading = 'lazy';
+
+      imageButton.append(image);
+      imageButton.addEventListener('click', () => {
+        modalImage.src = item.hdurl;
+        modalImage.alt = item.title;
+        modalTitle.textContent = item.title;
+        modalDate.dateTime = item.date;
+        modalDate.textContent = item.date;
+        modalExplanation.textContent = item.explanation || 'No explanation is available for this image.';
+        imageModal.showModal();
+      });
 
       const title = document.createElement('h2');
       title.textContent = item.title;
@@ -87,7 +115,7 @@ async function getSpaceImages() {
       date.dateTime = item.date;
       date.textContent = item.date;
 
-      card.append(image, title, date);
+      card.append(imageButton, title, date);
       gallery.append(card);
     });
   } catch (error) {
